@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Photo Editing Prompts Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .section-header {
+            background-color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 30px 0 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #2575fc;
+        }
+        
+        .section-header h2 {
+            color: #2575fc;
+            font-size: 1.8rem;
+        }
+        
+        .section-header h3 {
+            color: #ff6b6b;
+            font-size: 1.5rem;
+        }
+        
+        .prompts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .prompt-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .prompt-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .prompt-header {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .republic-day .prompt-header {
+            background: linear-gradient(to right, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+            color: #333;
+        }
+        
+        .prompt-header h3 {
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .prompt-number {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .republic-day .prompt-number {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+        
+        .prompt-content {
+            padding: 20px;
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        .prompt-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #444;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .prompt-text::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .prompt-text::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .prompt-text::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(to right, #2575fc 0%, #6a11cb 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: linear-gradient(to right, #1c6ae4 0%, #5a0dbc 100%);
+            box-shadow: 0 4px 8px rgba(106, 17, 203, 0.3);
+        }
+        
+        .copy-btn.copied {
+            background: linear-gradient(to right, #00b09b 0%, #96c93d 100%);
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #00b09b;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .search-container {
+            margin-bottom: 30px;
+        }
+        
+        #searchInput {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        #searchInput:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .prompts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background-color: #2575fc;
+            color: white;
+            border-color: #2575fc;
+        }
+        
+        .prompt-card.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Photo Editing Prompts Collection</h1>
+            <p>A curated collection of high-quality AI prompts for photo editing. Click the copy button to use these prompts with Google Gemini or other AI image generators.</p>
+        </header>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search prompts by keyword (e.g., cinematic, portrait, winter, Republic Day)">
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All Prompts</button>
+            <button class="filter-btn" data-filter="google">Google Gemini</button>
+            <button class="filter-btn" data-filter="republic">Republic Day</button>
+            <button class="filter-btn" data-filter="cinematic">Cinematic</button>
+            <button class="filter-btn" data-filter="portrait">Portrait</button>
+        </div>
+        
+        <div class="section-header">
+            <h2>Google Gemini New Viral Prompts</h2>
+        </div>
+        
+        <div class="prompts-container" id="promptsContainer">
+            <!-- Google Gemini prompts will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="section-header">
+            <h3>26 January AI Photo Editing Prompts</h3>
+        </div>
+        
+        <div class="prompts-container" id="republicPromptsContainer">
+            <!-- Republic Day prompts will be inserted here by JavaScript -->
+        </div>
+        
+        <footer>
+            <p>AI Photo Editing Prompts Collection • All prompts are ready to use with Google Gemini and other AI image generators</p>
+            <p>Simply click "Copy Prompt" and paste into your preferred AI tool</p>
+        </footer>
+        
+        <div class="notification" id="notification">
+            <i class="fas fa-check-circle"></i>
+            <span>Prompt copied to clipboard!</span>
+        </div>
+    </div>
+    
+    <script>
+        // All the prompts from the user's request
+        const googlePrompts = [
+            {
+                id: 1,
+                title: "Ultra-realistic Wet Look Portrait",
+                text: `Ultra-realistic wet-look close-up portrait of a man (face 100% identical to uploaded image). Messy wet hair, water droplets on skin, sharp focus on bright/hazel eye, moist glossy lips. Cool soft lighting, light grey bokeh background, hyper-detailed 8K realism. His hand on one silver chain watch rolex and he wearing black shirt. Don't change the face. Face 100% same original.`,
+                tags: ["portrait", "realistic", "close-up"]
+            },
+            {
+                id: 2,
+                title: "South Indian Cinematic Portrait",
+                text: `A young south indian hyper-realistic cinematic portrait of a man under intense dual lighting. Deep bluish gray light from the right, cool cyan/blue rim light from the left. Skin is wet, glossy, covered with sweat droplets reflecting the neon lights. Extreme close-up side face angle, high-contrast shadows, sharp texture, dramatic mood. Bokeh background in pure red. Ultra-detailed pores, wet hair, moisture dripping, cinematic color grading. Capture emotional tension and intensity.`,
+                tags: ["cinematic", "portrait", "dramatic"]
+            },
+            {
+                id: 3,
+                title: "Contemplative Man with Vintage Background",
+                text: `A contemplative man with dark, wavy hair and a mustache is leaning against a corner wall covered in old newspaper clippings or vintage documents. He is looking off to the side with a thoughtful expression. He is wearing a loose-fitting, unbuttoned beige collared shirt and matching beige relaxed-fit trousers, with his hands in his pockets. The lighting is soft and warm, casting...`,
+                tags: ["contemplative", "vintage", "soft lighting"]
+            },
+            {
+                id: 4,
+                title: "Stylish Urban Dusk Portrait",
+                text: `Create a stylish young man (use reference image) age_19 with messy, volume hair strikes a dynamic pose outdoors at dusk, leaning with one hand on a blue-framed glass window and the other hand resting near his face. He is wearing a red white yellow loose shirt with the sleeves rolled up and light blue buggy pants, paired with white high-top sneakers. The background features an urban street with bold yellow-black striped barriers and a dramatic evening sky, giving the image a moody.`,
+                tags: ["urban", "stylish", "dusk"]
+            },
+            {
+                id: 5,
+                title: "Casual Selfie Style Portrait",
+                text: `Ultra-realistic a selfie young in front of a plain or softly-lit background. Hold phone in iphone 14 Pro one hand so it's visible in the mirror, and use your other hand to run through your hair, showing your wristwatch or bracelet clearly with small sunglasses. Wear a Deep Green and red shirt and a chain necklace, and make sure your face is partially covered by your hand and hair for a casually stylish look. Add any same face match in reference.white shirt lit.`,
+                tags: ["selfie", "casual", "stylish"]
+            },
+            {
+                id: 6,
+                title: "Natural Setting Fashion Portrait",
+                text: `Create image. A stylish young man with messy volume hair, posing outdoors in a vibrant natural setting. He's wearing an oversized light brown T-shirt with and a 'SAAB' logo, buggy jeans, rimless rectangular black sunglasses, a vertical bar pendant, and a black Apple Watch. The background is lush, softly blurred greenery with cinematic lighting, creating an ultra-realistic 8K DSLR-quality image.`,
+                tags: ["fashion", "natural", "DSLR"]
+            },
+            {
+                id: 7,
+                title: "Cinematic Neon Lighting Portrait",
+                text: `A man with sharp, well-defined facial features resembling the uploaded photo stands in a moody, dramatic photoshoot setting. He wears a knitted sweater with slight tears at the wrists, lifting the collar just slightly but without covering his face or placing any hand near it. His expressive eyes and intense gaze remain fully visible. The scene is illuminated with cinematic dual-tone neon red and blue lighting, creating a deep, high-contrast, atmospheric look against a dark, minimal background. Captured in an ultra-detailed, hyper-realistic style with soft shadows and professional studio quality lighting, evoking a sense of mystery and sophistication.`,
+                tags: ["cinematic", "neon", "dramatic"]
+            },
+            {
+                id: 8,
+                title: "Rainy Market Street Portrait",
+                text: `4K ultra-realistic cinematic full-body portrait of a handsome young man (100% same face and hairstyle as in the uploaded image) standing in a rainy market street. He holds a white umbrella as gentle rain falls from the sky, creating wet reflections on the ground. He wears a blue shirt over a white T-shirt, black pants, and white sneakers. A smartwatch shines subtly on his wrist. The market around him is softly blurred (bokeh style) — colorful shops, glowing signboards, and people in the background add a warm urban vibe. Raindrops glisten on his umbrella and shoulders, his hair slightly damp, giving a natural cinematic realism. Lighting is soft and moody, with streetlight reflections enhancing the rainy evening atmosphere. Emotional, elegant, and visually stunning 4K ultra-HD cinematic portrait.`,
+                tags: ["cinematic", "rainy", "urban"]
+            },
+            {
+                id: 9,
+                title: "Fashion Editorial Style Portrait",
+                text: `A stylish young man (Followed by given picture face 100% unchanged) Face and hair style use uploaded image, posing confidently with one arm resting on the back of a chair. He is wearing a light grey sweatshirt layered with a textured mesh-style dark jacket draped over his shoulders. The scene is lit with soft neon blue and orange lighting creating a cinematic and moody vibe. Dark background, high contrast, fashion editorial style, close-up portrait, soft shadows, dreamy aesthetic.`,
+                tags: ["fashion", "editorial", "cinematic"]
+            },
+            {
+                id: 10,
+                title: "Outdoor Casual Portrait",
+                text: `A hyper-realistic portrait of a stylish 22-year-old man resembling the uploaded photo, wearing a ribbed deep-red quarter-zip sweater with a small embroidered 'Avin' logo on the chest and light-colored cargo pants. He stands outdoors, leaning casually against a sleek metal railing. One hand adjusts his dark sunglasses while the other rests in his pocket, subtly revealing a round smartwatch. The background features soft, dark greenery with hints of warm red-orange foliage. Captured in natural daylight with professional, high-quality photography lighting — ultra-detailed textures, realistic skin tones, and cinematic depth of field.`,
+                tags: ["outdoor", "casual", "realistic"]
+            },
+            {
+                id: 11,
+                title: "Winter Campfire Scene",
+                text: `A realistic portrait of a young man sitting alone in an outdoor winter setting, warming himself by a small campfire. Behind him is a BMW car, with a softly blurred background that creates a cold, realistic winter atmosphere. Next to him is a plate containing fruits and cherries, while the warm glow of the fire reflects gently on his face and clothes. The lighting is warm from the fire, contrasting beautifully with the cool tones of the background, creating a calm, cinematic, and cozy mood.`,
+                tags: ["winter", "campfire", "cinematic"]
+            },
+            {
+                id: 12,
+                title: "Snowy Winter Fashion Portrait",
+                text: `Ultra-realistic cinematic winter portrait of a handsome young man (use this face) standing outdoors during heavy snowfall. He's wearing a thick black wool coat with a wide fur collar, layered over a white knitted sweater. He holds one side of the coat near his chest with one hand, while the other hand hangs relaxed by his side. A golden wristwatch is visible on his left wrist. Snowflakes gently fall around him and rest softly on his hair and coat, creating a realistic winter atmosphere. The background shows a European street covered in snow, with buildings and trees blanketed by a soft white layer, adding depth and a beautiful bokeh effect. Lighting is natural daylight - soft, cool, and diffused highlighting the textures of the snow and his clothing. The overall mood is elegant, calm, and cinematic, resembling a high-end winter fashion photoshoot. Style: Ultra-realistic soft, diffused lighting.`,
+                tags: ["winter", "snow", "fashion"]
+            },
+            {
+                id: 13,
+                title: "Aurora Borealis Winter Scene",
+                text: `A medium portrait of a young man holding a transparent umbrella, gently looking back toward the warm glow of a fire. He's dressed in warm winter clothing - a thick dark wool coat with a high collar, a knitted gray scarf, and black gloves - giving a cozy and stylish look. The background is blurred with strong bokeh, featuring pine trees, the aurora borealis, and thick white snow.`,
+                tags: ["winter", "aurora", "cozy"]
+            },
+            {
+                id: 14,
+                title: "Melancholic Rooftop Scene",
+                text: `Generate a photo of a young man sitting on a rooftop at night under full moonlight, looking at the sky with teary eyes. A gentle breeze is moving his hair. Use blue tones and soft shadows to create a melancholic, emotional cinematic feel. He is dressed in a loose white T-shirt, washed baggy jeans, a smartwatch, and white sneakers. A big, clear moon should be visible in the background sky. Keep the face the same as the uploaded photo.`,
+                tags: ["cinematic", "melancholic", "night"]
+            }
+        ];
+
+        const republicDayPrompts = [
+            {
+                id: 1,
+                title: "Republic Day Salute at Red Fort",
+                text: `Keep my face exactly the same as the uploaded photo. Do not change, edit, smooth, beautify, or regenerate my face in any way. 100% exact face match is mandatory. Create an ultra-realistic cinematic Republic Day portrait using the uploaded reference image. FACE & IDENTITY (STRICT LOCK) • Face must remain 100% identical to the reference image • No face reshaping • No beauty filter • No AI facial modification • Preserve natural skin texture, pores, facial structure, beard (if present), and expression • HD face clarity — crystal-clear facial details SUBJECT • A young Indian man standing proudly at Red Fort (Lal Qila), Delhi • Full body visible • Strong patriotic presence • Confident, emotional, proud expression POSE DETAILS (NEW & DIFFERENT) • Standing upright on the Red Fort grounds • Right hand raised in a respectful Republic Day salute • Left hand holding the Indian tricolor flag staff • Chest open, shoulders straight • Head slightly lifted • Eyes looking forward with pride and emotion OUTFIT DETAILS (TRICOLOR THEME) • Saffron jacket or kurta-style top • White inner layer or scarf • Green trousers or stole accent • Clean white shoes • Traditional + modern patriotic styling FLAG DETAILS • Indian national flag 🇮🇳 held firmly • Flag waving naturally in open air • Fabric folds realistic and detailed • Ashoka Chakra clearly visible BACKGROUND & ENVIRONMENT • Red Fort clearly visible and recognizable • Indian flags placed around the fort • Open sky with soft clouds • Light crowd blur in far background (no faces visible) • National celebration atmosphere TEXT ELEMENT (BACKGROUND) • Glowing cinematic tricolor text in the background reading: "Happy Republic Day 2026" • Text styled with soft glow and patriotic light streaks LIGHTING & CINEMATIC MOOD • Bright daytime cinematic lighting • Soft sunlight illuminating face • Balanced highlights and shadows • Vibrant yet natural colors • Emotional, goosebumps-worthy patriotic mood CAMERA & COMPOSITION • DSLR professional photography look • Medium full-body framing • Eye-level angle • Shallow depth of field • Subject sharply focused, background slightly blurred STYLE & QUALITY • Ultra-realistic • 8K-level clarity • Cinematic color grading • Natural skin tones • Premium Republic Day poster look ASPECT RATIO • 3:4 vertical TEXT / SIGNATURE Add "Geminiaiprompt.in" at the bottom-left corner, HANDWRITTEN SIGNATURE-STYLE typography, thin cursive strokes, small size, subtle premium elegance, white or soft off-white color. NEGATIVE PROMPT • Cartoon • Anime • CGI • Illustration • AI face • Face change • Plastic skin • Blur • Low quality • Watermark (except signature) • Extra limbs`,
+                tags: ["republic day", "patriotic", "red fort"]
+            },
+            {
+                id: 2,
+                title: "Republic Day Walking Portrait",
+                text: `Keep my face exactly the same as the uploaded photo. Do not change or edit my face in any form. 100% exact face match is strictly required. Create an ultra-realistic cinematic Republic Day lifestyle portrait using the uploaded reference photo. FACE & IDENTITY (STRICT) • Face must be 100% identical to the uploaded reference • No reshaping • No beautification • No AI enhancement • Natural human skin texture preserved • HD face clarity clearly visible SUBJECT • A young Indian man walking confidently at Red Fort, Delhi • Full body visible • Strong patriotic energy and confidence POSE DETAILS (COMPLETELY DIFFERENT) • Captured mid-walk, moving forward • Indian tricolor flag resting on shoulder, held firmly • One leg stepping forward confidently • Free arm swinging naturally • Body facing forward • Chin slightly raised • Eyes looking ahead with determination OUTFIT DETAILS (TRICOLOR STYLE) • White kurta or t-shirt base • Saffron scarf flowing with movement • Green jacket or pants accent • Clean white sneakers • Modern patriotic fashion vibe FLAG DETAILS • Large Indian tricolor flag 🇮🇳 • Fabric flowing dynamically in air • Realistic cloth texture • Ashoka Chakra clearly visible BACKGROUND & ENVIRONMENT • Red Fort architecture fully visible behind • Open parade-ground style area • Clear blue sky • Subtle festive decorations • National celebration mood TEXT ELEMENT (BACKGROUND) • Cinematic glowing text behind the subject: "Happy Republic Day 2026" • Tricolor glow effect with soft light rays LIGHTING & CINEMATIC MOOD • Bright natural daylight • Sunlight highlighting face and flag • Clean shadows • Vibrant patriotic colors • High-energy Republic Day atmosphere CAMERA & COMPOSITION • DSLR cinematic photography • Medium full-body shot • Slight low-angle for hero feel • Shallow depth of field • Sharp subject focus STYLE & QUALITY • Ultra-HD • Hyper-realistic • Cinematic patriotic look • Natural color grading • Magazine-quality Republic Day portrait ASPECT RATIO • 3:4 vertical TEXT / SIGNATURE Add "Geminiaiprompt.in" at the bottom-left corner, HANDWRITTEN SIGNATURE-STYLE typography, thin cursive strokes, small size, subtle premium elegance, white or soft off-white color. NEGATIVE PROMPT • Cartoon • Anime • CGI • Illustration • AI-generated face • Face change • Blur • Low resolution • Over-smooth skin • Watermark (except signature)`,
+                tags: ["republic day", "walking", "confident"]
+            },
+            {
+                id: 3,
+                title: "Heart-Touch Desh Bhakti Pose",
+                text: `Keep my face exactly the same as the uploaded photo. Do not change, edit, smooth, beautify, or regenerate my face in any way. 100% exact face match is mandatory. Create an ultra-realistic cinematic Republic Day portrait using the uploaded reference image. FACE & IDENTITY (STRICT LOCK) • Face must remain 100% identical to the reference • No face reshaping • No beauty filter • No AI facial modification • Preserve real skin texture, pores, facial structure, beard details, and expression • HD face clarity with crystal-sharp details SUBJECT • A young Indian man standing proudly at Red Fort (Lal Qila), Delhi • Full body visible • Calm yet deeply emotional patriotic presence POSE DETAILS (NEW & DIFFERENT) • Standing upright and still • Right hand placed firmly on chest (heart-touch Desh Bhakti pose) • Left hand holding the Indian tricolor flag pole • Shoulders straight, posture respectful • Head slightly tilted upward • Eyes focused on the Indian flag with emotion and pride OUTFIT DETAILS (TRICOLOR THEME) • White kurta or white fitted t-shirt • Saffron stole/scarf draped naturally • Green jacket or green accent layer • Clean white shoes • Simple, respectful patriotic styling FLAG DETAILS • Indian national flag 🇮🇳 placed beside the subject • Flag waving gently in open air • Realistic fabric folds • Ashoka Chakra clearly visible BACKGROUND & ENVIRONMENT • Red Fort architecture clearly visible • Open historic grounds • Light crowd blur far in background (no faces visible) • Clear sky with soft clouds • National celebration atmosphere TEXT ELEMENT (BACKGROUND) • Cinematic glowing tricolor text reading: "Happy Republic Day 2026" • Soft glow, elegant patriotic light rays LIGHTING & CINEMATIC MOOD • Bright natural daylight • Soft sunlight illuminating face evenly • Balanced highlights and shadows • Clean, vibrant patriotic colors • Emotional, respectful Republic Day mood CAMERA & COMPOSITION • DSLR professional photography look • Medium full-body framing • Eye-level angle • Shallow depth of field • Subject in sharp focus STYLE & QUALITY • Ultra-realistic • 8K-level clarity • Cinematic color grading • Natural skin tones • Poster-ready Republic Day look ASPECT RATIO • 3:4 vertical TEXT / SIGNATURE Add "Geminiaiprompt.in" at the bottom-left corner, HANDWRITTEN SIGNATURE-STYLE typography, thin cursive strokes, small size, subtle premium elegance, white or soft off-white color. NEGATIVE PROMPT • Cartoon • Anime • Illustration • CGI • AI face • Face change • Plastic skin • Blur • Low quality • Watermark (except signature)`,
+                tags: ["republic day", "emotional", "desh bhakti"]
+            },
+            {
+                id: 4,
+                title: "Respectful Republic Day Salute",
+                text: `Keep my face exactly the same as the uploaded photo. Do not change, edit, beautify, smooth, or regenerate my face in any way. 100% exact face match is mandatory. Create an ultra-realistic cinematic Republic Day portrait with a calm, emotional patriotic tone. FACE & IDENTITY (STRICT LOCK) • Face must remain 100% identical to the reference image • No face reshaping • No beauty filter • No AI facial modification • Preserve natural skin texture, pores, facial proportions, beard details, and expression • Natural HD face clarity — soft but sharp, realistic human look SUBJECT • A young Indian man standing silently at Red Fort (Lal Qila), Delhi • Full body visible • Respectful, emotional patriotic presence POSE DETAILS (NEW & DIFFERENT) • Standing straight with calm posture • Right hand raised in a slow, respectful Republic Day salute • Left hand relaxed naturally by the side • Shoulders squared • Head slightly bowed forward • Eyes softly focused toward the Indian flag • Expression: emotional, proud, respectful (no smile) OUTFIT DETAILS (SUBTLE TRICOLOR STYLE) • White kurta or white fitted shirt • Saffron stole lightly draped • Green accent band or scarf edge • Clean white shoes • Simple, respectful, non-flashy patriotic styling FLAG DETAILS • Indian tricolor flag 🇮🇳 placed slightly in front of the subject • Flag waving gently in early-morning air • Realistic cloth folds and texture • Ashoka Chakra clearly visible BACKGROUND & ENVIRONMENT • Red Fort architecture clearly recognizable • Early morning sky with soft light • Light mist / haze for depth • Empty or minimal crowd feel • Peaceful Republic Day atmosphere TEXT ELEMENT (BACKGROUND) • Soft glowing tricolor text reading: "Happy Republic Day 2026" • Elegant glow, not overpowering LIGHTING & CINEMATIC MOOD • Natural early-morning daylight • Soft golden highlights on face • Gentle shadows • Balanced exposure • Emotional, respectful patriotic mood CAMERA & COMPOSITION • DSLR professional photography look • Medium full-body framing • Eye-level angle • Shallow depth of field • Subject sharp, background slightly blurred STYLE & QUALITY • Ultra-realistic • 8K-level detail • Cinematic color grading • Natural skin tones • Poster-ready Republic Day portrait ASPECT RATIO • 3:4 vertical TEXT / SIGNATURE Add "Geminiaiprompt.in" at the bottom-left corner, HANDWRITTEN SIGNATURE-STYLE typography, thin cursive strokes, small size, subtle premium elegance, white or soft off-white color. NEGATIVE PROMPT • Cartoon • Anime • Illustration • CGI • AI face • Face change • Plastic skin • Blur • Low quality • Watermark (except signature)`,
+                tags: ["republic day", "respectful", "calm"]
+            },
+            {
+                id: 5,
+                title: "Modern Patriotic Youth Portrait",
+                text: `Keep my face exactly the same as the uploaded photo. Do not change or edit my face in any form. 100% exact face match is strictly required. Create an ultra-realistic cinematic Republic Day lifestyle portrait with a modern, confident patriotic vibe. FACE & IDENTITY (STRICT) • Face must be 100% identical to the uploaded reference • No reshaping • No beautification • No AI enhancement • Preserve natural human skin texture • Natural HD face clarity — clean, realistic, human SUBJECT • A young Indian man standing confidently near Red Fort, Delhi • Full body visible • Youthful, fearless patriotic confidence POSE DETAILS (COMPLETELY DIFFERENT) • Standing casually with relaxed posture • Indian tricolor flag wrapped loosely around shoulders like a cape • One hand holding the flag edge • Other hand resting casually in pocket • Body angled slightly to camera • Chin level • Eyes looking directly at camera • Expression: confident, proud, calm OUTFIT DETAILS (MODERN + TRICOLOR) • Dark jeans or trousers • White t-shirt or kurta base • Saffron & green tricolor flag as styling element • White sneakers • Modern patriotic youth fashion FLAG DETAILS • Large Indian tricolor flag 🇮🇳 • Fabric draped naturally over shoulders • Realistic cloth texture • Ashoka Chakra visible BACKGROUND & ENVIRONMENT • Red Fort visible clearly in background • Open courtyard area • Clear sky • Subtle Republic Day decorations • Clean, celebratory atmosphere TEXT ELEMENT (BACKGROUND) • Stylish glowing text behind subject: "Happy Republic Day 2026" • Tricolor glow with soft cinematic light LIGHTING & CINEMATIC MOOD • Bright natural daylight • Soft directional light on face • Clean shadows • Vibrant yet natural colors • Energetic, hopeful Republic Day mood CAMERA & COMPOSITION • DSLR cinematic photography • Medium full-body framing • Slight low-angle hero composition • Shallow depth of field • Sharp subject focus STYLE & QUALITY • Ultra-HD • Hyper-realistic • Cinematic patriotic look • Natural color grading • Social-media-ready premium portrait ASPECT RATIO • 3:4 vertical TEXT / SIGNATURE Add "Geminiaiprompt.in" at the bottom-left corner, HANDWRITTEN SIGNATURE-STYLE typography, thin cursive strokes, small size, subtle premium elegance, white or soft off-white color. NEGATIVE PROMPT • Cartoon • Anime • Illustration • CGI • AI-generated face • Face change • Blur • Low resolution • Over-smooth skin • Watermark (except signature)`,
+                tags: ["republic day", "modern", "confident"]
+            }
+        ];
+
+        // Function to create prompt card HTML
+        function createPromptCard(prompt, isRepublicDay = false) {
+            return `
+                <div class="prompt-card ${isRepublicDay ? 'republic-day' : ''}" data-tags="${prompt.tags.join(',')}">
+                    <div class="prompt-header">
+                        <h3>${prompt.title}</h3>
+                        <span class="prompt-number">${prompt.id}</span>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">${prompt.text}</div>
+                        <button class="copy-btn" data-prompt="${encodeURIComponent(prompt.text)}">
+                            <i class="far fa-copy"></i> Copy Prompt
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to display prompts
+        function displayPrompts() {
+            const googleContainer = document.getElementById('promptsContainer');
+            const republicContainer = document.getElementById('republicPromptsContainer');
+            
+            googleContainer.innerHTML = '';
+            republicContainer.innerHTML = '';
+            
+            googlePrompts.forEach(prompt => {
+                googleContainer.innerHTML += createPromptCard(prompt, false);
+            });
+            
+            republicDayPrompts.forEach(prompt => {
+                republicContainer.innerHTML += createPromptCard(prompt, true);
+            });
+            
+            // Add event listeners to copy buttons
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const promptText = decodeURIComponent(this.getAttribute('data-prompt'));
+                    copyToClipboard(promptText);
+                    
+                    // Show notification
+                    showNotification();
+                    
+                    // Change button text temporarily
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    this.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+        }
+
+        // Function to copy text to clipboard
+        function copyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        }
+
+        // Function to show notification
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to filter prompts based on search input
+        function filterPrompts() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            const allPromptCards = document.querySelectorAll('.prompt-card');
+            
+            allPromptCards.forEach(card => {
+                const promptText = card.querySelector('.prompt-text').textContent.toLowerCase();
+                const promptTitle = card.querySelector('h3').textContent.toLowerCase();
+                const tags = card.getAttribute('data-tags').toLowerCase();
+                
+                if (promptText.includes(searchTerm) || promptTitle.includes(searchTerm) || tags.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Function to filter by category
+        function filterByCategory(category) {
+            const allPromptCards = document.querySelectorAll('.prompt-card');
+            
+            allPromptCards.forEach(card => {
+                const tags = card.getAttribute('data-tags').toLowerCase();
+                
+                if (category === 'all' || tags.includes(category)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            displayPrompts();
+            
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', filterPrompts);
+            
+            // Filter buttons functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter prompts
+                    const filter = this.getAttribute('data-filter');
+                    filterByCategory(filter);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
